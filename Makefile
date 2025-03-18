@@ -1,4 +1,4 @@
-PROJECTNAME = dcrpt
+PROJECTNAME = shrd 
 OUTPUT_DIR = build
 OBJ_DIR = $(OUTPUT_DIR)/obj
 
