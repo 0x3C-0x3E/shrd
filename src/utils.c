@@ -11,6 +11,11 @@ int get_random(int min, int max)
 	return min + randombytes_uniform(max - min + 1);
 }
 
+void crypto_random_with_seed(unsigned char *buffer, size_t length, const unsigned char *seed)
+{
+    randombytes_buf_deterministic(buffer, length, seed);
+}
+
 
 void generate_key(char * filename)
 {

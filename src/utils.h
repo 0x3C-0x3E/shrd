@@ -16,4 +16,6 @@ typedef struct
 
 int get_random(int min, int max);
 
+void crypto_random_with_seed(unsigned char *buffer, size_t length, const unsigned char *seed);
+
 void generate_key(char * filename);
