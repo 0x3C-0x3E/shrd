@@ -1,5 +1,5 @@
 # shrd
-shrd is a very easy to crack tool to encrypt and decrypt files, written in pure C
+shrd is a very easy to crack tool to encrypt and decrypt files, written in pure C using libsodium for the random functions
 
 ## Usage ##
 
