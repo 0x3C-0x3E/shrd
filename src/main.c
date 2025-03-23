@@ -83,43 +83,35 @@ int handle_keygen(int argc, char* argv[])
 	return 0;
 }
 
-int encrypt_file(int arc, char* argv[])
+int encrypt_file(int argc, char* argv[])
 {
-	FILE * enc_file_ptr = fopen(argv[2], "r");
-	FILE * key_file_ptr = fopen(argv[3], "r");
 
-	if (enc_file_ptr == NULL || key_file_ptr == NULL)
-	{
-		printf("could not open file\n");
-		return -1;
+	for (int i = 0; i < argc; i++) {
+		printf("[argv] %s\n", argv[i]);
 	}
 
-
-	// get key
 	char key[KEYLEN] = {0};
 
-	fgets(key, KEYLEN, key_file_ptr);
-	fclose(key_file_ptr);
+	if (get_file(argv[3], key, KEYLEN) == 1)
+		return 1;
+
 	printf("[INFO] Read Key as: %s\n", key);
 
 
-	// get enc file size
-	fseek(enc_file_ptr, 0, SEEK_END);
-	int size = ftell(enc_file_ptr);
-	fseek(enc_file_ptr, 0, SEEK_SET);
-
+	int size = get_file_size(argv[2]);
 	printf("[INFO] Read Encrytion file length to be: %d\n", size);
+	
 
 	char enc_file[size] = {0};
-
-	fgets(enc_file, size, enc_file_ptr);
+	if (get_file(argv[2], enc_file, size) == 1)
+		return 1;
 
 	printf("[INFO] Read File contents: %s\n", enc_file);
 
-	fclose(enc_file_ptr);
+
 
 	//write to file
-	enc_file_ptr = fopen(argv[2], "w");
+	FILE * enc_file_ptr = fopen(argv[2], "w");
 
 	char cipher_text[size] = {0};
 
@@ -145,5 +137,41 @@ int encrypt_file(int arc, char* argv[])
 
 int decrypt_file(int argc, char* argv[])
 {
-	return 0;	
+	if (encrypt_file(argc, argv) != 0)
+	{
+		return 1;
+	}
+	return 0;
+}
+
+int get_file(char * filepath, char* buffer, int buffer_size)
+{
+	FILE * file_ptr = fopen(filepath, "r");
+
+	if (file_ptr == NULL)
+	{
+		printf("[ERROR] Could not open file\n");
+		return -1;
+	}
+
+	size_t bytes_read = fread(buffer, 1, buffer_size - 1, file_ptr);
+	buffer[bytes_read] = '\0';  // Null-terminate the string
+
+	fclose(file_ptr);
+
+	return 0;
+
+}
+
+int get_file_size(char * filepath)
+{
+	FILE * file_ptr = fopen(filepath, "r");
+
+	fseek(file_ptr, 0, SEEK_END);
+	int size = ftell(file_ptr);
+	fseek(file_ptr, 0, SEEK_SET);
+
+	fclose(file_ptr);
+
+	return size;
 }
